@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Putra Juwana - Kebutuhan Dapur Lengkap</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="index.css">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+</head>
+<body>
+
+    <div class="container">
+        <nav>
+            <div class="logo">PUTRA<span>JUWANA</span></div>
+            <ul class="nav-links">
+                <li><a href="#" onclick="filterByCategory('Semua')">Beranda</a></li>
+                <li><a href="#kategori" onclick="filterByCategory('Semua')">Kategori</a></li>
+                <li><a href="#produk">Produk </a></li>
+                <li><a href="#tentang-kami">Tentang Kami</a></li>
+            </ul>
+            <div class="nav-actions">
+                <div class="search-box">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                    <input type="text" id="searchInput" placeholder="Cari kebutuhan..." onkeydown="if(event.key === 'Enter') searchProducts()">
+                </div>
+                <div style="position:relative; cursor:pointer" title="Keranjang" onclick="toggleCartDrawer()">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>
+                    <span id="cartBadge" style="position:absolute; top:-5px; right:-5px; background:var(--primary); color:white; font-size:10px; padding:2px 5px; border-radius:50%">0</span>
+                </div>
+                <a href="login.html" title="Dashboard Admin" style="color: #64748B; transition: 0.3s;" onmouseover="this.style.color='#FF5C00'" onmouseout="this.style.color='#64748B'">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+                </a>
+            </div>
+        </nav>
+
+        <!-- Hero -->
+        <section class="hero">
+            <div class="hero-content">
+                <span class="badge">BELANJA NYAMAN, HARGA TEMAN</span>
+                <h1>Belanja Mudah <br> <span>Kebutuhan</span> Terpenuhi.</h1>
+                <p>“Dari beras hingga kebutuhan harian lainnya, Putra Juwana menyediakan berbagai kebutuhan rumah tangga dengan kualitas terbaik dan harga terjangkau.”</p>
+                <div class="hero-btns">
+                    <button class="btn btn-primary" onclick="window.scrollTo({top: 800, behavior: 'smooth'})">Belanja Sekarang</button>
+                </div>
+            </div>
+            <div class="hero-img">
+                <img src="img/toko.jpg" alt="Grocery">
+                <div class="floating-card">
+                    <div style="background:var(--primary); color:white; padding:10px; border-radius:12px">⭐</div>
+                    <div>
+                        <div style="font-weight:800; font-size:14px">100% Amanah</div>
+                        <div style="font-size:11px; color:#6474bb">Garansi Kualitas</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- Promosi Spesial -->
+        <section id="promosi" style="display: none; margin: 40px 0 80px 0;">
+            <div class="section-header">
+                <div>
+                    <h2>Promo Spesial Juwana</h2>
+                    <p style="color:#64748B; font-size:14px">Dapatkan penawaran harga diskon terbaik hanya hari ini.</p>
+                </div>
+            </div>
+            <div id="promoGrid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 24px; margin-top: 24px;">
+                <!-- Populated dynamically via JS -->
+            </div>
+        </section>
+
+        <!-- Kategori -->
+        <section id="kategori">
+            <div class="section-header">
+                <div>
+                    <h2>Kategori Produk</h2>
+                    <p style="color:#64748B; font-size:14px">Temukan barang yang Anda butuhkan dengan mudah.</p>
+                </div>
+                  
+            </div>
+            <div class="category-grid" id="categoryGrid">
+                <!-- Data akan diisi secara dinamis -->
+            </div>
+        </section>
+
+        <!-- Katalog Produk -->
+        <section id="produk">
+            <div class="section-header">
+                <h2 id="catalogTitle">Produk </h2>
+            </div>
+            <div class="catalog-grid" id="catalogGrid">
+                <!-- Data akan diisi via JS -->
+            </div>
+        </section>
+
+        <!-- Tentang Kami SECTION -->
+        <section id="tentang-kami" style="padding: 100px 0; background: var(--bg-light); border-radius: 40px; margin: 80px 0;">
+            <div class="container" style="display: grid; grid-template-columns: 1fr 1fr; align-items: center; gap: 60px;">
+                <div>
+                    <span class="badge">PROFIL TOKO</span>
+                    <h2 style="font-size: 36px; font-weight: 800; margin-bottom: 25px; line-height: 1.2;">Putra Juwana: Sejarah</h2>
+                    <p style="color: var(--text-light); margin-bottom: 20px; font-size: 15px;">Berdiri sejak tahun 2009, Toko Putra Juwana yang berlokasi di Prambanan, Sleman hadir untuk memenuhi kebutuhan sehari-hari masyarakat sekitar dengan pelayanan yang ramah dan produk yang berkualitas.</p>
+                    <p style="color: var(--text-light); margin-bottom: 20px; font-size: 15px;">Kini, kami telah berkembang menjadi salah satu penyedia kebutuhan dapur terlengkap. Kami percaya bahwa setiap keluarga berhak mendapatkan bahan pangan segar dan peralatan rumah tangga terbaik dengan harga yang tetap bersahabat.</p>
+                    <div style="display: flex; gap: 30px; margin-top: 40px;">
+                        
+                    </div>
+                </div>
+                <div style="border-radius: 30px; overflow: hidden; box-shadow: var(--shadow);">
+                    <img src="https://images.unsplash.com/photo-1578916171728-46686eac8d58?auto=format&fit=crop&q=80&w=800" alt="Tentang Kami" style="width: 100%; display: block;">
+                </div>
+            </div>
+        </section>
+
+        <!-- Banner Ongkir -->
+        <section class="shipping-banner">
+            <div class="banner-content">
+                <h2>Gratis Ongkir Ke <br> Seluruh Prambanan.</h2>
+                <p>Minimal belanja Rp 500.000, belanjaan langsung diantar sampai depan pintu tanpa biaya tambahan!</p>
+                <a href="#" class="btn-whatsapp" onclick="orderWhatsApp('Informasi Ongkir', '0')">Order via WhatsApp</a>
+            </div>
+            <div class="banner-img-circle">
+                <img src="https://images.unsplash.com/photo-1583258292688-d0213dc5a3a8?auto=format&fit=crop&q=80&w=600" alt="Market">
+            </div>
+        </section>
+    </div>
+
+    <footer>
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-about">
+                    <h2>PUTRA<span>JUWANA</span></h2>
+                    <p>Menyediakan produk berkualitas tinggi untuk masyarakat Prambanan dan sekitarnya sejak tahun 2009. Kepercayaan Anda adalah prioritas kami.</p>
+                    <div style="display:flex; gap:15px">
+                        
+                    </div>
+                </div>
+                <div class="footer-links">
+                    <h4>Menu</h4>
+                    <ul>
+                        <li><a href="#" onclick="filterByCategory('Semua')">Beranda</a></li>
+                        <li><a href="#kategori">Kategori</a></li>
+                        <li><a href="#tentang-kami">Tentang Kami</a></li>
+                        <li><a href="#hubungi-kami">Kontak</a></li>
+                    </ul>
+                </div>
+                <div class="footer-links" id="hubungi-kami">
+                    <h4>Hubungi Kami</h4>
+                    <div class="contact-item">
+                        <span>📍</span>
+                        <span>Klurak Baru, Bokoharjo, Prambanan, Sleman, <br> DI Yogyakarta</span>
+                    </div>
+                    <div class="contact-item">
+                        <span>📞</span>
+                        <span>08157985516</span>
+                    </div>
+                </div>
+            </div>
+            <div class="copyright">
+                <p>© 2024 Putra Juwana. Semua Hak Dilindungi.</p>
+                <div style="display:flex; gap:20px">
+                    <a href="#">Privasi</a>
+                    <a href="#">Syarat & Ketentuan</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Mobile Bottom Navigation (Visible on Smartphone) -->
+    <div class="mobile-bottom-nav">
+        <a class="mobile-nav-item active" onclick="handleMobileNav(this, 'beranda')">
+            <i data-lucide="home"></i>
+            <span>Beranda</span>
+        </a>
+        <a class="mobile-nav-item" onclick="handleMobileNav(this, 'kategori')">
+            <i data-lucide="grid"></i>
+            <span>Kategori</span>
+        </a>
+        <a class="mobile-nav-item" onclick="handleMobileNav(this, 'cart')">
+            <i data-lucide="shopping-cart"></i>
+            <span>Keranjang</span>
+            <span class="mobile-cart-badge" id="mobileCartBadge" style="display: none;">0</span>
+        </a>
+        <a class="mobile-nav-item" onclick="handleMobileNav(this, 'tentang-kami')">
+            <i data-lucide="info"></i>
+            <span>Tentang</span>
+        </a>
+        <a href="login.html" class="mobile-nav-item">
+            <i data-lucide="shield"></i>
+            <span>Admin</span>
+        </a>
+    </div>
+
+    <!-- Cart Backdrop & Drawer -->
+    <div class="cart-backdrop" id="cartBackdrop" onclick="toggleCartDrawer()"></div>
+    <div class="cart-drawer" id="cartDrawer">
+        <div class="cart-header">
+            <h3>Keranjang Belanja</h3>
+            <button class="close-cart-btn" onclick="toggleCartDrawer()" title="Tutup">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+            </button>
+        </div>
+        <div class="cart-body" id="cartBody">
+            <!-- Items populated by JS -->
+        </div>
+        <div class="cart-footer">
+            <div class="cart-summary-row">
+                <span>Total Biaya</span>
+                <span id="cartTotal">Rp 0</span>
+            </div>
+            <button class="btn-checkout" onclick="checkoutCart()">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color: white; fill: white;"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg>
+                Pesan via WhatsApp
+            </button>
+        </div>
+    </div>
+
+    <!-- Mini Alert Toast -->
+    <div id="toastAlert" style="position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(100px); background: var(--secondary); color: white; padding: 12px 24px; border-radius: 50px; z-index: 3000; font-weight: 700; font-size: 14px; box-shadow: 0 10px 20px rgba(0,0,0,0.15); display: flex; align-items: center; gap: 8px; transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.3s ease; pointer-events: none; opacity: 0;">
+        <span id="toastIcon">🛒</span>
+        <span id="toastText">Produk ditambahkan!</span>
+    </div>
+
+    <script>
+        const defaultProducts = [
+            { id: 1, name: "Beras Premium 5kg", price: "75.000", cat: "Sembako", stock: 5, img: "img/beras.jpg" },
+            { id: 2, name: "Minyak Goreng 2L", price: "34.000", cat: "Sembako", stock: 4, img: "https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?w=400" },
+            { id: 3, name: "Telur Ayam 1kg", price: "28.000", cat: "Sembako", stock: 10, img: "https://images.unsplash.com/photo-1516734212186-a967f81ad0d7?w=400" },
+            { id: 4, name: "Kopi Giling Juwana", price: "45.000", cat: "Minuman", stock: 12, img: "https://images.unsplash.com/photo-1559056199-641a0ac8b55e?w=400" },
+            { id: 5, name: "Sayur Bayam Segar", price: "3.500", cat: "Sayuran", stock: 30, img: "https://images.unsplash.com/photo-1576045057995-568f588f82fb?w=400" },
+            { id: 6, name: "Sabun Cuci Piring", price: "15.000", cat: "Kebersihan", stock: 45, img: "https://images.unsplash.com/photo-1603507964919-4cb503348633?w=400" },
+            { id: 7, name: "Biskuit Gandum", price: "12.000", cat: "Makanan", stock: 5, img: "https://images.unsplash.com/photo-1558961363-fa4fb79697ed?w=400" },
+            { id: 8, name: "Susu Kotak 1L", price: "18.500", cat: "Minuman", stock: 9, img: "https://images.unsplash.com/photo-1563636619-e91082a11952?w=400" }
+        ];
+
+        const defaultCategories = [
+            { id: "Sembako", name: "Sembako", icon: "shopping-basket", desc: "120+ Produk" },
+            { id: "Bumbu Dapur", name: "Bumbu Dapur", icon: "vegan", desc: "85+ Produk" },
+            { id: "Minuman & Makanan", name: "Minuman & Makanan", icon: "hand-platter", desc: "200+ Produk" },
+            { id: "Gas LPG", name: "Gas LPG", icon: "sparkles", desc: "50+ Produk" },
+            
+        ];
+
+        const defaultPromotions = [
+            { id: 1, title: "Beras Premium Hemat", desc: "Belanja Beras Sleman Premium diskon akhir pekan, buruan borong!", discount: "Diskon 10%", img: "https://images.unsplash.com/photo-1586201375761-83865001e31c?w=400" },
+            { id: 2, title: "Minyak Goreng Murah", desc: "Minyak goreng merk pilihan dengan harga super miring khusus pelanggan setia.", discount: "Hemat Rp 5.000", img: "https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?w=400" }
+        ];
+
+        // Setup direct in-memory copy (no localStorage persistence, ensuring complete reset on reload)
+        let products = JSON.parse(JSON.stringify(defaultProducts));
+        let categories = JSON.parse(JSON.stringify(defaultCategories));
+        let promotions = JSON.parse(JSON.stringify(defaultPromotions));
+
+        // Cart State Management
+        let cart = JSON.parse(localStorage.getItem('pj_cart')) || [];
+
+        function saveCart() {
+            localStorage.setItem('pj_cart', JSON.stringify(cart));
+            updateCartCount();
+            renderCart();
+        }
+
+        function updateCartCount() {
+            const totalCount = cart.reduce((sum, item) => sum + item.quantity, 0);
+            const badge = document.getElementById('cartBadge');
+            if (badge) {
+                badge.innerText = totalCount;
+            }
+            const mobileBadge = document.getElementById('mobileCartBadge');
+            if (mobileBadge) {
+                mobileBadge.innerText = totalCount;
+                if (totalCount > 0) {
+                    mobileBadge.style.display = 'block';
+                } else {
+                    mobileBadge.style.display = 'none';
+                }
+            }
+        }
+
+        function handleMobileNav(element, targetId) {
+            document.querySelectorAll('.mobile-nav-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            if (element) {
+                element.classList.add('active');
+            }
+
+            if (targetId === 'cart') {
+                toggleCartDrawer();
+            } else if (targetId === 'beranda') {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+                filterByCategory('Semua');
+            } else {
+                const section = document.getElementById(targetId);
+                if (section) {
+                    section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            }
+        }
+
+        function toggleCartDrawer() {
+            const drawer = document.getElementById('cartDrawer');
+            const backdrop = document.getElementById('cartBackdrop');
+            if (drawer && backdrop) {
+                drawer.classList.toggle('open');
+                backdrop.classList.toggle('show');
+            }
+        }
+
+        function showMiniAlert(text, type = 'success') {
+            const toast = document.getElementById('toastAlert');
+            const toastText = document.getElementById('toastText');
+            const toastIcon = document.getElementById('toastIcon');
+            if (!toast || !toastText) return;
+
+            toastText.innerText = text;
+            if (type === 'error') {
+                toast.style.background = '#EF4444';
+                if (toastIcon) toastIcon.innerText = '⚠️';
+            } else {
+                toast.style.background = 'var(--secondary)';
+                if (toastIcon) toastIcon.innerText = '🛒';
+            }
+
+            toast.style.opacity = '1';
+            toast.style.transform = 'translateX(-50%) translateY(0)';
+
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                toast.style.transform = 'translateX(-50%) translateY(100px)';
+            }, 2500);
+        }
+
+        function addToCart(name, priceStr, maxStock, img) {
+            const existingIndex = cart.findIndex(item => item.name === name);
+            const price = parseFloat(priceStr.replace(/\./g, ''));
+
+            if (existingIndex > -1) {
+                if (cart[existingIndex].quantity < maxStock) {
+                    cart[existingIndex].quantity += 1;
+                    showMiniAlert(`${name} berhasil ditambahkan! Total: ${cart[existingIndex].quantity}`);
+                } else {
+                    showMiniAlert(`Stok terbatas! Maksimal ${maxStock} item.`, 'error');
+                    return;
+                }
+            } else {
+                if (maxStock > 0) {
+                    cart.push({
+                        name: name,
+                        price: price,
+                        priceStr: priceStr,
+                        quantity: 1,
+                        maxStock: maxStock,
+                        img: img
+                    });
+                    showMiniAlert(`${name} ditambahkan ke keranjang.`);
+                } else {
+                    showMiniAlert(`Maaf, stok produk habis!`, 'error');
+                    return;
+                }
+            }
+            saveCart();
+        }
+
+        function changeQuantity(name, change) {
+            const itemIndex = cart.findIndex(item => item.name === name);
+            if (itemIndex > -1) {
+                const item = cart[itemIndex];
+                const newQty = item.quantity + change;
+                if (newQty <= 0) {
+                    cart.splice(itemIndex, 1);
+                    showMiniAlert(`${name} dihapus.`);
+                } else if (newQty > item.maxStock) {
+                    showMiniAlert(`Stok terbatas! Maksimal ${item.maxStock} item.`, 'error');
+                    return;
+                } else {
+                    item.quantity = newQty;
+                }
+                saveCart();
+            }
+        }
+
+        function removeFromCart(name) {
+            cart = cart.filter(item => item.name !== name);
+            saveCart();
+            showMiniAlert(`Produk dihapus.`);
+        }
+
+        function formatRupiah(num) {
+            return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+        }
+
+        function renderCart() {
+            const cartBody = document.getElementById('cartBody');
+            const cartTotal = document.getElementById('cartTotal');
+            if (!cartBody) return;
+
+            if (cart.length === 0) {
+                cartBody.innerHTML = `
+                    <div class="cart-empty-state">
+                        <i data-lucide="shopping-basket" style="width: 48px; height: 48px; color: #CBD5E1; margin-bottom: 16px;"></i>
+                        <p style="font-weight: 700; color: var(--secondary);">Keranjang Kosong</p>
+                        <p style="font-size: 12px; color: var(--text-light); max-width: 250px; margin-top: 4px;">Belum ada produk yang ditambahkan ke keranjang belanja Anda.</p>
+                    </div>
+                `;
+                if (cartTotal) cartTotal.innerText = "Rp 0";
+                lucide.createIcons();
+                return;
+            }
+
+            let total = 0;
+            cartBody.innerHTML = cart.map(item => {
+                const itemTotal = item.price * item.quantity;
+                total += itemTotal;
+                return `
+                    <div class="cart-item">
+                        <img src="${item.img}" alt="${item.name}">
+                        <div class="cart-item-detail">
+                            <h4>${item.name}</h4>
+                            <div class="price">Rp ${formatRupiah(itemTotal)}</div>
+                            <div class="cart-quantity-controls">
+                                <button class="qty-btn" onclick="changeQuantity('${item.name}', -1)">-</button>
+                                <span style="font-size: 14px; font-weight: 700; min-width: 20px; text-align: center;">${item.quantity}</span>
+                                <button class="qty-btn" onclick="changeQuantity('${item.name}', 1)">+</button>
+                            </div>
+                        </div>
+                        <button class="cart-item-remove" onclick="removeFromCart('${item.name}')" title="Hapus">
+                            <i data-lucide="trash-2" style="width: 18px; height: 18px;"></i>
+                        </button>
+                    </div>
+                `;
+            }).join('');
+
+            if (cartTotal) {
+                cartTotal.innerText = "Rp " + formatRupiah(total);
+            }
+            lucide.createIcons();
+        }
+
+        function renderProducts(data) {
+            const grid = document.getElementById('catalogGrid');
+            
+            if (data.length === 0) {
+                grid.innerHTML = `
+                    <div style="grid-column: 1/-1; text-align: center; padding: 80px 20px; background: var(--bg-light); border-radius: 30px; border: 2px dashed #E2E8F0;">
+                        <div style="font-size: 64px; margin-bottom: 20px; filter: grayscale(1);">🔎</div>
+                        <h3 style="font-size: 22px; font-weight: 800; color: var(--secondary); margin-bottom: 10px;">Maaf, Produk Tidak Tersedia</h3>
+                        <p style="color: var(--text-light); max-width: 400px; margin: 0 auto 30px;">Kami tidak menemukan produk yang sesuai dengan kata kunci tersebut. Coba cari dengan nama lain atau jelajahi kategori kami.</p>
+                        <button class="btn btn-primary" onclick="document.getElementById('searchInput').value=''; renderProducts(products)">Tampilkan Semua Produk</button>
+                    </div>
+                `;
+                return;
+            }
+
+            grid.innerHTML = data.map(p => `
+                <div class="product-card" style="box-shadow: var(--shadow); border: 1px solid #E2E8F0; border-radius: 24px; padding: 16px; background: white; display: flex; flex-direction: column; justify-content: space-between;">
+                    <div>
+                        <div class="product-img" style="position: relative; border-radius: 16px; overflow: hidden; height: 160px; margin-bottom: 12px; cursor: pointer;" onclick="addToCart('${p.name}', '${p.price}', ${p.stock}, '${p.img}')">
+                            <img src="${p.img}" alt="${p.name}" style="width: 100%; height: 100%; object-fit: cover;">
+                        </div>
+                        <h4 style="font-size: 15px; font-weight: 700; color: var(--secondary); margin-bottom: 4px; height: 44px; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; cursor: pointer;" onclick="addToCart('${p.name}', '${p.price}', ${p.stock}, '${p.img}')">${p.name}</h4>
+                        <div class="price" style="font-size: 16px; font-weight: 800; color: var(--primary); margin-bottom: 8px;">Rp ${p.price}</div>
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                            <span style="font-size:11px; color:#94A3B8; background:#F1F5F9; padding:2px 8px; border-radius:4px;">${p.cat}</span>
+                            <span style="font-size:11px; font-weight:700; color: ${p.stock >= 10 ? '#166534' : '#EF4444'}">
+                                ${p.stock > 0 ? `Stok: ${p.stock}` : 'Stok Habis'}
+                            </span>
+                        </div>
+                    </div>
+                    <div style="display: flex; gap: 8px; margin-top: auto;">
+                        <button class="btn btn-outline" style="flex: 1; padding: 8px; font-size: 12px; border-radius: 8px; display: flex; align-items: center; justify-content: center; gap: 6px; border: 1px solid #E2E8F0; height: 36px; background: white;" onclick="addToCart('${p.name}', '${p.price}', ${p.stock}, '${p.img}')" ${p.stock === 0 ? 'disabled style="opacity: 0.5; cursor: not-allowed;"' : ''}>
+                            <i data-lucide="shopping-cart" style="width: 14px; height: 14px;"></i>
+                            <span>+ Keranjang</span>
+                        </button>
+                        <button class="btn btn-primary" style="padding: 8px; font-size: 12px; border-radius: 8px; background: var(--primary); display: flex; align-items: center; justify-content: center; width: 36px; height: 36px;" onclick="orderWhatsApp('${p.name}', '${p.price}')" title="Beli Langsung lewat WhatsApp">
+                            <i data-lucide="message-square" style="width: 16px; height: 16px; color: white;"></i>
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+            lucide.createIcons();
+        }
+
+        function filterByCategory(category) {
+            let filtered;
+            if (category === 'Semua') {
+                filtered = products;
+                document.getElementById('catalogTitle').innerText = "Semua Produk";
+            } else {
+                filtered = products.filter(p => p.cat === category);
+                document.getElementById('catalogTitle').innerText = "Produk: " + category;
+            }
+            renderProducts(filtered);
+            
+            // Scroll ke bagian produk
+            const target = document.getElementById('produk');
+            if(target) target.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function searchProducts() {
+            const query = document.getElementById('searchInput').value.toLowerCase();
+            const filtered = products.filter(p => 
+                p.name.toLowerCase().includes(query) || 
+                p.cat.toLowerCase().includes(query)
+            );
+            renderProducts(filtered);
+            
+            // Fokuskan layar ke hasil pencarian
+            const target = document.getElementById('produk');
+            if(target) target.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // GANTI NOMOR WHATSAPP ADMIN DI SINI
+        const NOMOR_WA_ADMIN = "628157985516"; 
+
+        function orderWhatsApp(name, price) {
+            const text = `Halo Admin Putra Juwana, saya tertarik dengan:\n\nProduk: ${name}\nHarga: Rp ${price}\n\nApakah barang ini masih tersedia?`;
+            window.open(`https://wa.me/${NOMOR_WA_ADMIN}?text=${encodeURIComponent(text)}`, '_blank');
+        }
+
+        function checkoutCart() {
+            if (cart.length === 0) {
+                showMiniAlert('Keranjang Anda masih kosong!', 'error');
+                return;
+            }
+
+            let message = `Halo Admin Putra Juwana, saya ingin memesan barang-barang berikut:\n\n`;
+            let total = 0;
+
+            cart.forEach((item, index) => {
+                const itemTotal = item.price * item.quantity;
+                total += itemTotal;
+                message += `${index + 1}. *${item.name}* (${item.quantity}x)\n   Harga: Rp ${formatRupiah(itemTotal)}\n\n`;
+            });
+
+            message += `*Total Belanja:* Rp ${formatRupiah(total)}\n\n`;
+            message += `Mohon bantu info ketersediaan stok & metode pengiriman. Terima kasih!`;
+
+            window.open(`https://wa.me/${NOMOR_WA_ADMIN}?text=${encodeURIComponent(message)}`, '_blank');
+        }
+
+        function renderCategories() {
+            const grid = document.getElementById('categoryGrid');
+            if (!grid) return;
+            grid.innerHTML = categories.map(cat => {
+                const count = products.filter(p => p.cat === cat.name).length;
+                return `
+                    <div class="category-card" onclick="filterByCategory('${cat.name}')">
+                        <i data-lucide="${cat.icon || 'shopping-basket'}" class="category-icon"></i>
+                        <div class="category-info">
+                            <h3>${cat.name}</h3>
+                            <p>${count} Produk</p>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+            lucide.createIcons();
+        }
+
+        function renderPromotions() {
+            const grid = document.getElementById('promoGrid');
+            const section = document.getElementById('promosi');
+            if (!grid || !section) return;
+
+            if (promotions.length === 0) {
+                section.style.display = 'none';
+                return;
+            }
+
+            section.style.display = 'block';
+            grid.innerHTML = promotions.map(promo => {
+                const imgUrl = promo.img || 'https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&q=80&w=400';
+                return `
+                    <div class="promo-card" style="background: linear-gradient(135deg, #FF5C00 0%, #FF8A00 100%); color: white; border-radius: 24px; padding: 25px; display: flex; justify-content: space-between; align-items: center; position: relative; overflow: hidden; box-shadow: 0 10px 20px rgba(255,92,0,0.15); min-height: 160px;">
+                        <div style="flex: 1; z-index: 2; padding-right: 15px; text-align: left;">
+                            <span style="background: rgba(255,255,255,0.25); color: white; padding: 4px 12px; border-radius: 50px; font-size: 10px; font-weight: 800; text-transform: uppercase; display: inline-block; margin-bottom: 8px;">${promo.discount || 'PROMO'}</span>
+                            <h3 style="font-size: 18px; font-weight: 800; line-height: 1.25; margin-bottom: 6px; text-shadow: 0 1px 2px rgba(0,0,0,0.15); color: white; margin-top: 0;">${promo.title}</h3>
+                            <p style="font-size: 12px; opacity: 0.95; margin-bottom: 14px; line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; margin-top: 0; color: white;">${promo.desc}</p>
+                            <button class="btn" style="background: white; color: #FF5C00; border: none; padding: 6px 16px; font-size: 11px; border-radius: 50px; font-weight: 700; cursor: pointer; transition: 0.2s;" onclick="orderWhatsApp('Promo: ${promo.title.replace(/'/g, "\\'")}', 'Promo')">Pesan Sekarang</button>
+                        </div>
+                        <img src="${imgUrl}" alt="${promo.title}" style="width: 100px; height: 100px; object-fit: cover; border-radius: 16px; z-index: 2; border: 3px solid rgba(255,255,255,0.3); box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
+                        <div style="position: absolute; right: -20px; top: -20px; width: 150px; height: 150px; background: rgba(255,255,255,0.06); border-radius: 50%;"></div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Initial Render
+        updateCartCount();
+        renderCart();
+        renderProducts(products);
+        renderCategories();
+        renderPromotions();
+        lucide.createIcons();
+    </script>
+</body>
+</html>

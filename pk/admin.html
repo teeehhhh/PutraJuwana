@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Putra Juwana</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="admin.css">
+</head>
+<body>
+
+    <div class="mobile-header">
+        <div class="logo-admin">ADMIN <span>PUTRA</span></div>
+        <button class="menu-toggle-btn" onclick="toggleMobileMenu()">☰</button>
+    </div>
+
+    <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleMobileMenu()"></div>
+
+    <aside>
+        <div class="logo-admin">ADMIN <span>PUTRA JUWANA</span></div>
+        <button class="menu-btn active" id="tabProducts" onclick="toggleTab('products')">Kelola Produk</button>
+        <button class="menu-btn" id="tabCategories" onclick="toggleTab('categories')">Kelola Kategori</button>
+        <button class="menu-btn" id="tabPromotions" onclick="toggleTab('promotions')">Kelola Promosi</button>
+        <a href="login.html" class="logout">Logout</a>
+    </aside>
+
+    <!-- Content: Products -->
+    <main id="contentProducts">
+        <div class="header">
+            <h1>Manajemen Produk</h1>
+            <button class="btn-add" onclick="showModal()">+ Tambah Produk</button>
+        </div>
+        <div class="grid" id="productGrid">
+            <!-- Rendered via JS -->
+        </div>
+    </main>
+
+    <!-- Content: Categories -->
+    <main id="contentCategories" style="display: none;">
+        <div class="header">
+            <h1>Manajemen Kategori</h1>
+            <button class="btn-add" onclick="showCategoryModal()">+ Tambah Kategori</button>
+        </div>
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>NAMA KATEGORI</th>
+                        <th>LUCIDE ICON</th>
+                        <th>JUMLAH PRODUK</th>
+                        <th>AKSI</th>
+                    </tr>
+                </thead>
+                <tbody id="categoryTableBody">
+                    <!-- Rendered via JS -->
+                </tbody>
+            </table>
+        </div>
+    </main>
+
+    <!-- Content: Promotions -->
+    <main id="contentPromotions" style="display: none;">
+        <div class="header">
+            <h1>Manajemen Promosi</h1>
+            <button class="btn-add" onclick="showPromotionModal()">+ Tambah Promosi</button>
+        </div>
+        <div class="grid" id="promotionGrid">
+            <!-- Rendered via JS -->
+        </div>
+    </main>
+
+    <!-- Modal Form: Product -->
+    <div class="modal" id="modalForm">
+        <div class="modal-content">
+            <h2 id="modalTitle" style="margin-bottom: 25px;">Data Produk Baru</h2>
+            <form id="pForm" onsubmit="event.preventDefault(); saveProduct();">
+                <div class="form-group">
+                    <label>Nama Produk</label>
+                    <input type="text" id="pName" placeholder="Contoh: Beras Juwana" required>
+                </div>
+                <div class="form-group">
+                    <label>Harga (Rp)</label>
+                    <input type="number" id="pPrice" placeholder="75000" required>
+                </div>
+                <div class="form-group">
+                    <label>Kategori</label>
+                    <select id="pCat">
+                        <!-- Populated Dynamically -->
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Jumlah Stok</label>
+                    <input type="number" id="pStock" placeholder="Contoh: 50" required>
+                </div>
+                <div class="form-group">
+                    <label>Pilih File Gambar Produk</label>
+                    <input type="file" id="pImgFile" accept="image/*" onchange="previewProductImage(this)">
+                    <div id="pImgPreviewContainer" style="margin-top: 10px; display: none;">
+                        <img id="pImgPreview" src="" style="width: 80px; height: 80px; border-radius: 12px; object-fit: cover; border: 1px solid #E2E8F0;">
+                    </div>
+                </div>
+                <div style="display: flex; gap: 10px; margin-top: 30px;">
+                    <button type="button" class="btn btn-outline" style="flex:1; border:1px solid #ddd; padding:12px; border-radius:12px; cursor:pointer" onclick="closeModal()">Batal</button>
+                    <button type="submit" class="btn btn-primary" style="flex:2; background:var(--primary); color:white; border:none; padding:12px; border-radius:12px; cursor:pointer; font-weight:700">Simpan Produk</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal Form: Category -->
+    <div class="modal" id="modalCategory">
+        <div class="modal-content">
+            <h2 id="categoryModalTitle" style="margin-bottom: 25px;">Tambah Kategori Baru</h2>
+            <form id="catForm" onsubmit="event.preventDefault(); saveCategory();">
+                <div class="form-group">
+                    <label>Nama Kategori</label>
+                    <input type="text" id="catName" placeholder="Contoh: Sembako" required>
+                </div>
+                <div class="form-group">
+                    <label>Lucide Icon ID</label>
+                    <input type="text" id="catIcon" placeholder="Contoh: shopping-basket, vegan, sparks, cookie">
+                    <span style="font-size: 11px; color: var(--text-light); margin-top: 4px; display: block;">Masukkan id icon dari lucide (misal: shopping-basket, vegan, hand-platter, sparkles, cookie)</span>
+                </div>
+                <div style="display: flex; gap: 10px; margin-top: 30px;">
+                    <button type="button" class="btn btn-outline" style="flex:1; border:1px solid #ddd; padding:12px; border-radius:12px; cursor:pointer" onclick="closeCategoryModal()">Batal</button>
+                    <button type="submit" class="btn btn-primary" style="flex:2; background:var(--primary); color:white; border:none; padding:12px; border-radius:12px; cursor:pointer; font-weight:700">Simpan Kategori</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal Form: Promotion -->
+    <div class="modal" id="modalPromotion">
+        <div class="modal-content">
+            <h2 id="promotionModalTitle" style="margin-bottom: 25px;">Tambah Promosi Baru</h2>
+            <form id="promoForm" onsubmit="event.preventDefault(); savePromotion();">
+                <div class="form-group">
+                    <label>Judul Promosi</label>
+                    <input type="text" id="promoTitle" placeholder="Contoh: Beras Premium Hemat" required>
+                </div>
+                <div class="form-group">
+                    <label>Label Diskon / Badge</label>
+                    <input type="text" id="promoDiscount" placeholder="Contoh: Diskon 10% atau Hemat Rp 5.000" required>
+                </div>
+                <div class="form-group">
+                    <label>Deskripsi Penawaran singkat</label>
+                    <textarea id="promoDesc" placeholder="Belanja hemat diskon spesial, buruan borong!" style="width: 100%; height: 85px; padding: 12px 15px; border: 1px solid #E2E8F0; border-radius: 12px; outline: none; font-family: inherit;" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Pilih File Gambar Banner Promosi</label>
+                    <input type="file" id="promoImgFile" accept="image/*" onchange="previewPromoImage(this)">
+                    <div id="promoImgPreviewContainer" style="margin-top: 10px; display: none;">
+                        <img id="promoImgPreview" src="" style="width: 120px; height: 60px; border-radius: 12px; object-fit: cover; border: 1px solid #E2E8F0;">
+                    </div>
+                </div>
+                <div style="display: flex; gap: 10px; margin-top: 30px;">
+                    <button type="button" class="btn btn-outline" style="flex:1; border:1px solid #ddd; padding:12px; border-radius:12px; cursor:pointer" onclick="closePromotionModal()">Batal</button>
+                    <button type="submit" class="btn btn-primary" style="flex:2; background:var(--primary); color:white; border:none; padding:12px; border-radius:12px; cursor:pointer; font-weight:700">Simpan Promosi</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Setup initial databases synced with index.html
+        const defaultProducts = [
+            { id: 1, name: "Beras Premium 5kg", price: "75.000", cat: "Sembako", stock: 5, img: "https://images.unsplash.com/photo-1586201375761-83865001e31c?w=400" },
+            { id: 2, name: "Minyak Goreng 2L", price: "34.000", cat: "Sembako", stock: 4, img: "https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?w=400" },
+            { id: 3, name: "Telur Ayam 1kg", price: "28.000", cat: "Sembako", stock: 10, img: "https://images.unsplash.com/photo-1516734212186-a967f81ad0d7?w=400" },
+            { id: 4, name: "Kopi Giling Juwana", price: "45.000", cat: "Minuman", stock: 12, img: "https://images.unsplash.com/photo-1559056199-641a0ac8b55e?w=400" },
+            { id: 5, name: "Sayur Bayam Segar", price: "3.500", cat: "Sayuran", stock: 30, img: "https://images.unsplash.com/photo-1576045057995-568f588f82fb?w=400" },
+            { id: 6, name: "Sabun Cuci Piring", price: "15.000", cat: "Kebersihan", stock: 45, img: "https://images.unsplash.com/photo-1603507964919-4cb503348633?w=400" },
+            { id: 7, name: "Biskuit Gandum", price: "12.000", cat: "Makanan", stock: 5, img: "https://images.unsplash.com/photo-1558961363-fa4fb79697ed?w=400" },
+            { id: 8, name: "Susu Kotak 1L", price: "18.500", cat: "Minuman", stock: 9, img: "https://images.unsplash.com/photo-1563636619-e91082a11952?w=400" }
+        ];
+
+        const defaultCategories = [
+            { id: "Sembako", name: "Sembako", icon: "shopping-basket", desc: "120+ Produk" },
+            { id: "Bumbu Dapur", name: "Bumbu Dapur", icon: "vegan", desc: "85+ Produk" },
+            { id: "Minuman & Makanan", name: "Minuman & Makanan", icon: "hand-platter", desc: "200+ Produk" },
+            { id: "Gas LPG", name: "Gas LPG", icon: "sparkles", desc: "50+ Produk" },
+            
+        ];
+
+        const defaultPromotions = [
+            { id: 1, title: "Beras Premium Hemat", desc: "Belanja Beras Sleman Premium diskon akhir pekan, buruan borong!", discount: "Diskon 10%", img: "https://images.unsplash.com/photo-1586201375761-83865001e31c?w=400" },
+            { id: 2, title: "Minyak Goreng Murah", desc: "Minyak goreng merk pilihan dengan harga super miring khusus pelanggan setia.", discount: "Hemat Rp 5.000", img: "https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?w=400" }
+        ];
+
+        // Setup direct in-memory copy (no localStorage persistence, ensuring complete reset on reload)
+        let products = JSON.parse(JSON.stringify(defaultProducts));
+        let categories = JSON.parse(JSON.stringify(defaultCategories));
+        let promotions = JSON.parse(JSON.stringify(defaultPromotions));
+
+        // Image upload preview state
+        let uploadedProductImgBase64 = "";
+        let uploadedPromoImgBase64 = "";
+
+        function previewProductImage(input) {
+            const file = input.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    uploadedProductImgBase64 = e.target.result;
+                    document.getElementById('pImgPreview').src = e.target.result;
+                    document.getElementById('pImgPreviewContainer').style.display = 'block';
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function previewPromoImage(input) {
+            const file = input.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    uploadedPromoImgBase64 = e.target.result;
+                    document.getElementById('promoImgPreview').src = e.target.result;
+                    document.getElementById('promoImgPreviewContainer').style.display = 'block';
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        // --- Tab controls ---
+        function toggleTab(tab) {
+            const pCont = document.getElementById('contentProducts');
+            const cCont = document.getElementById('contentCategories');
+            const prCont = document.getElementById('contentPromotions');
+
+            const pBtn = document.getElementById('tabProducts');
+            const cBtn = document.getElementById('tabCategories');
+            const prBtn = document.getElementById('tabPromotions');
+
+            // Hide all contents
+            pCont.style.display = 'none';
+            cCont.style.display = 'none';
+            prCont.style.display = 'none';
+
+            // Remove active classes
+            pBtn.classList.remove('active');
+            cBtn.classList.remove('active');
+            prBtn.classList.remove('active');
+
+            if (tab === 'products') {
+                pCont.style.display = 'block';
+                pBtn.classList.add('active');
+                renderAdminProducts();
+            } else if (tab === 'categories') {
+                cCont.style.display = 'block';
+                cBtn.classList.add('active');
+                renderAdminCategories();
+            } else if (tab === 'promotions') {
+                prCont.style.display = 'block';
+                prBtn.classList.add('active');
+                renderAdminPromotions();
+            }
+
+            // Auto-close layout drawer on mobile when tab changes
+            if (window.innerWidth <= 768) {
+                const sidebar = document.querySelector('aside');
+                const overlay = document.getElementById('sidebarOverlay');
+                if (sidebar.classList.contains('open')) {
+                    sidebar.classList.remove('open');
+                    overlay.classList.remove('active');
+                }
+            }
+        }
+
+        function toggleMobileMenu() {
+            const sidebar = document.querySelector('aside');
+            const overlay = document.getElementById('sidebarOverlay');
+            sidebar.classList.toggle('open');
+            overlay.classList.toggle('active');
+        }
+
+        // --- Product management state & functions ---
+        let currentEditProductId = null;
+
+        function renderAdminProducts() {
+            const grid = document.getElementById('productGrid');
+            grid.innerHTML = products.map(p => `
+                <div class="card">
+                    <img src="${p.img}" alt="${p.name}">
+                    <div class="card-info" style="flex: 1;">
+                        <h3 style="font-weight: 700;">${p.name}</h3>
+                        <p style="margin-top:2px;">Rp ${p.price}</p>
+                        <div style="font-size:11px; color:#94A3B8; margin-top:5px">
+                            <span>Kategori: <strong>${p.cat}</strong></span> | 
+                            <span style="font-weight:700; color:${p.stock >= 10 ? '#166534' : '#EF4444'}">Stok: ${p.stock}</span>
+                        </div>
+                    </div>
+                    <div class="card-actions" style="margin-left: 10px;">
+                        <button class="btn-icon" onclick="editProduct(${p.id})" title="Edit">✎</button>
+                        <button class="btn-icon" style="color:#EF4444" onclick="deleteProduct(${p.id})" title="Hapus">✖</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function populateCategorySelect() {
+            const select = document.getElementById('pCat');
+            if (select) {
+                select.innerHTML = categories.map(cat => `
+                    <option value="${cat.name}">${cat.name}</option>
+                `).join('');
+            }
+        }
+
+        function showModal() {
+            populateCategorySelect();
+            uploadedProductImgBase64 = '';
+            document.getElementById('pImgPreviewContainer').style.display = 'none';
+            document.getElementById('pImgPreview').src = '';
+            document.getElementById('pImgFile').value = '';
+            document.getElementById('modalForm').style.display = 'flex';
+        }
+
+        function closeModal() {
+            document.getElementById('modalForm').style.display = 'none';
+            currentEditProductId = null;
+            document.getElementById('modalTitle').innerText = "Data Produk Baru";
+            document.getElementById('pForm').reset();
+            uploadedProductImgBase64 = '';
+            document.getElementById('pImgPreviewContainer').style.display = 'none';
+            document.getElementById('pImgPreview').src = '';
+            document.getElementById('pImgFile').value = '';
+        }
+
+        function editProduct(id) {
+            const p = products.find(prod => prod.id === id);
+            if (!p) return;
+
+            currentEditProductId = p.id;
+            document.getElementById('modalTitle').innerText = "Edit Data Produk";
+            document.getElementById('pName').value = p.name;
+            const numericPrice = p.price.replace(/\./g, '');
+            document.getElementById('pPrice').value = numericPrice;
+            
+            populateCategorySelect();
+            document.getElementById('pCat').value = p.cat;
+            
+            document.getElementById('pStock').value = p.stock;
+            
+            uploadedProductImgBase64 = p.img || '';
+            const previewContainer = document.getElementById('pImgPreviewContainer');
+            const previewImg = document.getElementById('pImgPreview');
+            if (p.img) {
+                previewImg.src = p.img;
+                previewContainer.style.display = 'block';
+            } else {
+                previewContainer.style.display = 'none';
+                previewImg.src = '';
+            }
+            document.getElementById('pImgFile').value = '';
+
+            document.getElementById('modalForm').style.display = 'flex';
+        }
+
+        function saveProduct() {
+            const name = document.getElementById('pName').value;
+            const price = document.getElementById('pPrice').value;
+            const cat = document.getElementById('pCat').value;
+            const stock = document.getElementById('pStock').value;
+
+            // Simple Rupiah Formatting for view (e.g. 75000 -> 75.000)
+            const formattedPrice = parseInt(price).toLocaleString('id-ID').replace(/,/g, '.');
+            const fallbackImg = uploadedProductImgBase64 || "https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&q=80&w=400";
+
+            if (currentEditProductId) {
+                const index = products.findIndex(p => p.id === currentEditProductId);
+                if (index > -1) {
+                    products[index].name = name;
+                    products[index].price = formattedPrice;
+                    products[index].cat = cat;
+                    products[index].stock = parseInt(stock);
+                    products[index].img = fallbackImg;
+                }
+                alert("Produk berhasil diperbarui!");
+            } else {
+                products.unshift({
+                    id: Date.now(),
+                    name: name,
+                    price: formattedPrice,
+                    cat: cat,
+                    stock: parseInt(stock),
+                    img: fallbackImg
+                });
+                alert("Produk baru berhasil ditambahkan!");
+            }
+
+            renderAdminProducts();
+            closeModal();
+        }
+
+        function deleteProduct(id) {
+            if (confirm("Apakah Anda yakin ingin menghapus produk ini?")) {
+                products = products.filter(p => p.id !== id);
+                renderAdminProducts();
+            }
+        }
+
+        // --- Category management functions ---
+        let currentEditCatId = null;
+
+        function renderAdminCategories() {
+            const tbody = document.getElementById('categoryTableBody');
+            if (!tbody) return;
+
+            tbody.innerHTML = categories.map(cat => {
+                const count = products.filter(p => p.cat === cat.name).length;
+                return `
+                    <tr>
+                        <td style="font-weight:700">${cat.name}</td>
+                        <td style="font-family:monospace;">${cat.icon || 'shopping-basket'}</td>
+                        <td style="font-weight:700; color:var(--primary)">${count} Produk</td>
+                        <td>
+                            <div style="display:flex; gap:10px;">
+                                <button class="btn-icon" onclick="editCategory('${cat.id}')" title="Edit">✎</button>
+                                <button class="btn-icon" style="color:#EF4444" onclick="deleteCategory('${cat.id}')" title="Hapus">✖</button>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        function showCategoryModal() {
+            document.getElementById('modalCategory').style.display = 'flex';
+        }
+
+        function closeCategoryModal() {
+            document.getElementById('modalCategory').style.display = 'none';
+            currentEditCatId = null;
+            document.getElementById('categoryModalTitle').innerText = "Tambah Kategori Baru";
+            document.getElementById('catForm').reset();
+        }
+
+        function editCategory(id) {
+            const cat = categories.find(c => c.id === id);
+            if (!cat) return;
+
+            currentEditCatId = cat.id;
+            document.getElementById('categoryModalTitle').innerText = "Edit Data Kategori";
+            document.getElementById('catName').value = cat.name;
+            document.getElementById('catIcon').value = cat.icon || 'shopping-basket';
+
+            showCategoryModal();
+        }
+
+        function saveCategory() {
+            const name = document.getElementById('catName').value;
+            const icon = document.getElementById('catIcon').value || 'shopping-basket';
+
+            if (currentEditCatId) {
+                const index = categories.findIndex(c => c.id === currentEditCatId);
+                if (index > -1) {
+                    categories[index].name = name;
+                    categories[index].icon = icon;
+                }
+                alert("Kategori berhasil diperbarui!");
+            } else {
+                const generatedId = name.trim().toLowerCase().replace(/\s+/g, '-');
+                if (categories.some(c => c.id === generatedId)) {
+                    alert("Kategori dengan nama serupa (ID: " + generatedId + ") sudah terdaftar!");
+                    return;
+                }
+                categories.push({
+                    id: generatedId,
+                    name: name,
+                    icon: icon,
+                    desc: "0+ Produk"
+                });
+                alert("Kategori baru berhasil ditambahkan!");
+            }
+
+            renderAdminCategories();
+            populateCategorySelect();
+            closeCategoryModal();
+        }
+
+        function deleteCategory(id) {
+            if (confirm("Apakah Anda yakin ingin menghapus kategori ini?")) {
+                categories = categories.filter(c => c.id !== id);
+                renderAdminCategories();
+                populateCategorySelect();
+            }
+        }
+
+        // --- Promotion management functions ---
+        let currentEditPromoId = null;
+
+        function renderAdminPromotions() {
+            const grid = document.getElementById('promotionGrid');
+            if (!grid) return;
+
+            grid.innerHTML = promotions.map(p => `
+                <div class="card" style="flex-direction: column; gap:12px; align-items: stretch; border: 1px solid #E2E8F0; border-radius: 20px;">
+                    <img src="${p.img || 'https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&q=80&w=400'}" alt="${p.title}" style="width:100%; height:120px; border-radius:12px; object-fit:cover;">
+                    <div>
+                        <span style="background:rgba(255,92,0,0.1); color:var(--primary); font-size:11px; font-weight:800; padding:2px 8px; border-radius:4px;">${p.discount}</span>
+                        <h3 style="font-size:16px; font-weight:700; margin-top:6px; margin-bottom:4px;">${p.title}</h3>
+                        <p style="font-size:12px; color:var(--text-light); line-height:1.4; height: 36px; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;">${p.desc}</p>
+                    </div>
+                    <div style="display:flex; gap:10px; border-top:1px solid #F1F5F9; padding-top:10px; justify-content:flex-end; margin-top:auto;">
+                        <button class="btn-icon" onclick="editPromotion(${p.id})">✎ Edit</button>
+                        <button class="btn-icon" style="color:#EF4444" onclick="deletePromotion(${p.id})">✖ Hapus</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function showPromotionModal() {
+            uploadedPromoImgBase64 = '';
+            document.getElementById('promoImgPreviewContainer').style.display = 'none';
+            document.getElementById('promoImgPreview').src = '';
+            document.getElementById('promoImgFile').value = '';
+            document.getElementById('modalPromotion').style.display = 'flex';
+        }
+
+        function closePromotionModal() {
+            document.getElementById('modalPromotion').style.display = 'none';
+            currentEditPromoId = null;
+            document.getElementById('promotionModalTitle').innerText = "Tambah Promosi Baru";
+            document.getElementById('promoForm').reset();
+            uploadedPromoImgBase64 = '';
+            document.getElementById('promoImgPreviewContainer').style.display = 'none';
+            document.getElementById('promoImgPreview').src = '';
+            document.getElementById('promoImgFile').value = '';
+        }
+
+        function editPromotion(id) {
+            const promo = promotions.find(p => p.id === id);
+            if (!promo) return;
+
+            currentEditPromoId = promo.id;
+            document.getElementById('promotionModalTitle').innerText = "Edit Data Promosi";
+            document.getElementById('promoTitle').value = promo.title;
+            document.getElementById('promoDiscount').value = promo.discount;
+            document.getElementById('promoDesc').value = promo.desc;
+            
+            uploadedPromoImgBase64 = promo.img || '';
+            const previewContainer = document.getElementById('promoImgPreviewContainer');
+            const previewImg = document.getElementById('promoImgPreview');
+            if (promo.img) {
+                previewImg.src = promo.img;
+                previewContainer.style.display = 'block';
+            } else {
+                previewContainer.style.display = 'none';
+                previewImg.src = '';
+            }
+            document.getElementById('promoImgFile').value = '';
+
+            showPromotionModal();
+        }
+
+        function savePromotion() {
+            const title = document.getElementById('promoTitle').value;
+            const discount = document.getElementById('promoDiscount').value;
+            const desc = document.getElementById('promoDesc').value;
+
+            const fallbackImg = uploadedPromoImgBase64 || "https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&q=80&w=400";
+
+            if (currentEditPromoId) {
+                const index = promotions.findIndex(p => p.id === currentEditPromoId);
+                if (index > -1) {
+                    promotions[index].title = title;
+                    promotions[index].discount = discount;
+                    promotions[index].desc = desc;
+                    promotions[index].img = fallbackImg;
+                }
+                alert("Promosi berhasil diperbarui!");
+            } else {
+                promotions.push({
+                    id: Date.now(),
+                    title: title,
+                    discount: discount,
+                    desc: desc,
+                    img: fallbackImg
+                });
+                alert("Promosi baru berhasil ditambahkan!");
+            }
+
+            renderAdminPromotions();
+            closePromotionModal();
+        }
+
+        function deletePromotion(id) {
+            if (confirm("Apakah Anda yakin ingin menghapus promosi ini?")) {
+                promotions = promotions.filter(p => p.id !== id);
+                renderAdminPromotions();
+            }
+        }
+
+        // --- Page load init ---
+        renderAdminProducts();
+        populateCategorySelect();
+    </script>
+</body>
+</html>
